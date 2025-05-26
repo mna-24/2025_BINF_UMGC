@@ -1,0 +1,14 @@
+> seq1
+3 ORFs in forward, 0 in reverse
+
+> seq2
+2 ORFs in forward, 0 in reverse
+
+> seq3
+0 ORFs in forward, 4 in reverse
+
+> seq4
+3 ORFs in forward, 1 ORFs in reverse
+
+> seq5
+0 ORFs in forward, 0 ORFs in reverse
