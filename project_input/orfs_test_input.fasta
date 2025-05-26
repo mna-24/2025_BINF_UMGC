@@ -1,4 +1,10 @@
->seq1
+> seq1
 ATGAAATGAATGCCCTAGGATGCGTTAG
->seq2
-gttatcgatgtttgacgtatgaattgctgaatctgaaaatgtaatagctga
+> seq2
+ATGAAATAATTTATGTAGCGGTATGAATAA
+> seq3
+CTATTCTACTTCATACCATCAACTACATTTAACGCAT
+> seq4
+atggccattatgacataattagaaaatgtagtttga
+> seq5
+ATG
