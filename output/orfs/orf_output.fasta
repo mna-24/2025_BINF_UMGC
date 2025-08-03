@@ -1,2 +1,2 @@
-> seq4 | FRAME = 1 | POS = 1 | LEN = 18 | FOR
+>seq4 | FRAME = 1 | POS = 1 | LEN = 18 | FOR
 ATG GCC ATT ATG ACA TAA

@@ -8,9 +8,10 @@ import sys
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
+# Team Member Name: Raquel
+
+# TODO: Parse a multi-line FASTA file, return dictionary {header: sequence}
 def load_fasta(filepath):
-    # Team Member Name: Raquel
-    # TODO: Parse a multi-line FASTA file, return dictionary {header: sequence}
     """Load sequences from a multi-FASTA file into a dictionary."""
     sequences = {}
     header = None
@@ -18,22 +19,20 @@ def load_fasta(filepath):
         for line in file:
             line = line.strip()
             if line.startswith('>'):
-                header = line[1:]
+                header = line[1:].strip()
                 sequences[header] = ''
             elif header:
                 sequences[header] += line.upper()
     return sequences
 
+# TODO: Return reverse complement of sequence (optional: use Bio.Seq)
 def reverse_complement(seq):
-    # Team Member Name: Raquel
-    # TODO: Return reverse complement of sequence (optional: use Bio.Seq)
     """Return the reverse complement of a DNA sequence."""
     complement = str.maketrans('ATCGN', 'TAGCN')
     return seq.translate(complement)[::-1]
 
+# TODO: Identify ORFs in all 3 reading frames for one strand
 def find_orfs(header, sequence, min_len, strand="+"):
-    # Team Member Name: Raquel    
-    # TODO: Identify ORFs in all 3 reading frames for one strand
     """Identify ORFs in all 3 reading frames of one strand."""
     start_codon = 'ATG'
     stop_codons = ['TAA', 'TAG', 'TGA']
@@ -41,35 +40,36 @@ def find_orfs(header, sequence, min_len, strand="+"):
 
     for frame in range(3):
         pos = frame
-        while pos < len(sequence) - 2:
+        while pos <= len(sequence) - 3:
             codon = sequence[pos:pos+3]
             if codon == start_codon:
-                for end in range(pos + 3, len(sequence)-2, 3):
+                for end in range(pos + 3, len(sequence), 3):
                     stop = sequence[end:end+3]
                     if stop in stop_codons:
                         orf_seq = sequence[pos:end+3]
                         if len(orf_seq) >= min_len * 3:
-                            results.append((frame+1, pos+1, orf_seq, strand))
-                        break
-                pos += 3
+                            if strand == '-':
+                                start_pos = len(sequence) - pos
+                            else:
+                                start_pos = pos + 1
+                            frame_num = frame + 1 if strand == '+' else frame + 4
+                            results.append((frame_num, start_pos, orf_seq, strand))
+                        break  # Do NOT skip ahead — allow overlapping ORFs
+                pos += 1  # Slide one base to allow overlapping ORFs
             else:
                 pos += 3
     return results
 
+# TODO: Return formatted FASTA header and codon-separated sequence
 def format_orf_output(header, frame, position, seq, strand):
-    # Team Member Name: Raquel
-    # TODO: Return formatted FASTA header and codon-separated sequence
     direction = 'FOR' if strand == '+' else 'REV'
     formatted = f">{header} | FRAME = {frame} | POS = {position} | LEN = {len(seq)} | {direction}\n"
     codon_chunks = ' '.join([seq[i:i+3] for i in range(0, len(seq), 3)])
     return formatted + codon_chunks + "\n"
 
+# TODO: create a visualization, save the file, for your ORF output
 def create_visualization(orf_data, output_path):
-    # Team Member Name: Raquel
-    # TODO: create a visualization, save the file, for your ORF output
     """Create a bar chart showing number of ORFs per sequence per strand and a histogram of ORF lengths."""
-    from collections import defaultdict
-
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     summary = defaultdict(lambda: {'FOR': 0, 'REV': 0})
     orf_lengths = []
@@ -106,16 +106,15 @@ def create_visualization(orf_data, output_path):
     plt.savefig(output_path)
     plt.close()
 
+# TODO: Implement user input, sequence processing, and ORF printing and save the file
 def main():
-    # Team Member Name: Raquel
-    # TODO: Implement user input, sequence processing, and ORF printing and save the file
     fasta_file = input("Enter FASTA filename: ")
-    try:
-        min_len = int(input("Enter minimum ORF length (default 5): ") or 5)
-    except ValueError:
-        min_len = 5
+    min_len_input = input("Enter minimum ORF length (default 5): ")
+    min_len = int(min_len_input) if min_len_input.isdigit() else 5
 
     sequences = load_fasta(fasta_file)
+    print(f"Loaded sequences: {list(sequences.keys())}")
+
     output_path = "./output/orfs/orf_output.fasta"
     visualization_path = "./output/visualization/orf_visualization.png"
 
