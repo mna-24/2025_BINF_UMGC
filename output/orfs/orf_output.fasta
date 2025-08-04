@@ -1,2 +1,18 @@
+>seq1 | FRAME = 1 | POS = 1 | LEN = 9 | FOR
+ATG AAA TGA
+>seq1 | FRAME = 1 | POS = 10 | LEN = 9 | FOR
+ATG CCC TAG
+>seq1 | FRAME = 1 | POS = 20 | LEN = 9 | FOR
+ATG CGT TAG
+>seq2 | FRAME = 1 | POS = 1 | LEN = 9 | FOR
+ATG AAA TAA
+>seq2 | FRAME = 1 | POS = 13 | LEN = 18 | FOR
+ATG TAG CGG TAT GAA TAA
+>seq3 | FRAME = 4 | POS = 37 | LEN = 9 | REV
+ATG CGT TAA
+>seq3 | FRAME = 4 | POS = 28 | LEN = 18 | REV
+ATG TAG TTG ATG GTA TGA
 >seq4 | FRAME = 1 | POS = 1 | LEN = 18 | FOR
 ATG GCC ATT ATG ACA TAA
+>seq4 | FRAME = 4 | POS = 16 | LEN = 9 | REV
+ATG TCA TAA

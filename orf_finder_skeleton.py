@@ -32,32 +32,51 @@ def reverse_complement(seq):
     return seq.translate(complement)[::-1]
 
 # TODO: Identify ORFs in all 3 reading frames for one strand
-def find_orfs(header, sequence, min_len, strand="+"):
-    """Identify ORFs in all 3 reading frames of one strand."""
-    start_codon = 'ATG'
-    stop_codons = ['TAA', 'TAG', 'TGA']
+def find_orfs(sequence, min_len, strand="+"):
+    """Strand-specific ORF detection that allows adjacent, non-overlapping ORFs and blocks true overlaps."""
+    start_codon = "ATG"
+    stop_codons = ["TAA", "TAG", "TGA"]
     results = []
+    seq_len = len(sequence)
+
+    used = [False] * seq_len  # Used bases for this strand only
 
     for frame in range(3):
         pos = frame
-        while pos <= len(sequence) - 3:
+        while pos <= seq_len - 3:
             codon = sequence[pos:pos+3]
+
             if codon == start_codon:
-                for end in range(pos + 3, len(sequence), 3):
+                # Check if this start codon overlaps an existing ORF
+                if any(used[pos:pos+3]):
+                    pos += 1
+                    continue
+
+                end = pos + 3
+                while end <= seq_len - 3:
                     stop = sequence[end:end+3]
                     if stop in stop_codons:
-                        orf_seq = sequence[pos:end+3]
-                        if len(orf_seq) >= min_len * 3:
-                            if strand == '-':
-                                start_pos = len(sequence) - pos
-                            else:
-                                start_pos = pos + 1
-                            frame_num = frame + 1 if strand == '+' else frame + 4
-                            results.append((frame_num, start_pos, orf_seq, strand))
-                        break  # Do NOT skip ahead — allow overlapping ORFs
-                pos += 1  # Slide one base to allow overlapping ORFs
+                        orf_len = end + 3 - pos
+                        if orf_len >= min_len * 3:
+                            # Only block ORFs that truly overlap
+                            if not any(used[pos:end]):
+                                orf_seq = sequence[pos:end+3]
+                                if strand == '+':
+                                    start_pos = pos + 1
+                                    frame_num = frame + 1
+                                else:
+                                    start_pos = seq_len - pos
+                                    frame_num = frame + 4
+                                results.append((frame_num, start_pos, orf_seq, strand))
+                                for i in range(pos, end):  # exclude stop codon
+                                    used[i] = True
+                                pos = end + 3  # move past stop codon
+                                break
+                    end += 3
+                else:
+                    pos += 3
             else:
-                pos += 3
+                pos += 1
     return results
 
 # TODO: Return formatted FASTA header and codon-separated sequence
@@ -108,36 +127,53 @@ def create_visualization(orf_data, output_path):
 
 # TODO: Implement user input, sequence processing, and ORF printing and save the file
 def main():
+    # Ask user for FASTA file and minimum ORF length
     fasta_file = input("Enter FASTA filename: ")
     min_len_input = input("Enter minimum ORF length (default 5): ")
     min_len = int(min_len_input) if min_len_input.isdigit() else 5
 
+    # Load sequences from the FASTA file
     sequences = load_fasta(fasta_file)
     print(f"Loaded sequences: {list(sequences.keys())}")
 
+    # Set paths for output FASTA file and visualization images
     output_path = "./output/orfs/orf_output.fasta"
     visualization_path = "./output/visualization/orf_visualization.png"
 
+    # Make sure output directories exist
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     os.makedirs(os.path.dirname(visualization_path), exist_ok=True)
 
+    # Store all ORFs across all sequences for summary and visualization
     all_orfs = []
+
+    # Open output file for writing ORF results
     with open(output_path, 'w') as out_file:
+        # Loop through each sequence in the FASTA file
         for header, seq in sequences.items():
-            orfs_forward = find_orfs(header, seq, min_len, strand='+')
+            # Find forward strand ORFs
+            orfs_forward = find_orfs(seq, min_len, strand='+')
             all_orfs.extend([(header, *orf) for orf in orfs_forward])
 
+            # Find reverse strand ORFs (from reverse complement)
             rev_seq = reverse_complement(seq)
-            orfs_reverse = find_orfs(header, rev_seq, min_len, strand='-')
+            orfs_reverse = find_orfs(rev_seq, min_len, strand='-')
             all_orfs.extend([(header, *orf) for orf in orfs_reverse])
 
+            # Print and write formatted ORF output
             for orf in orfs_forward + orfs_reverse:
                 frame, position, orf_seq, strand = orf
                 formatted = format_orf_output(header, frame, position, orf_seq, strand)
                 print(formatted.strip())
                 out_file.write(formatted)
 
+    # Create and save visualization charts
     create_visualization(all_orfs, visualization_path)
+
+# Run the program
+if __name__ == "__main__":
+    main()
+
 
 if __name__ == "__main__":
     main()
