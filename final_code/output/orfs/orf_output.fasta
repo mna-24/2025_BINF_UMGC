@@ -1,0 +1,24 @@
+>  seq1 | Frame = 1 | POS = 1 | LEN = 9 | FOR 
+ATG AAA TGA
+>  seq1 | Frame = 1 | POS = 20 | LEN = 9 | FOR 
+ATG CGT TAG
+>  seq1 | Frame = 2 | POS = 20 | LEN = 9 | FOR 
+ATG CGT TAG
+>  seq1 | Frame = 3 | POS = 10 | LEN = 9 | FOR 
+ATG CCC TAG
+>  seq1 | Frame = 3 | POS = 20 | LEN = 9 | FOR 
+ATG CGT TAG
+>  seq2 | Frame = 1 | POS = 1 | LEN = 9 | FOR 
+ATG AAA TAA
+>  seq3 | Frame = 4 | POS = 37 | LEN = 9 | REV 
+ATG CGT TAA
+>  seq3 | Frame = 6 | POS = 14 | LEN = 9 | REV 
+ATG AAG TAG
+>  seq4 | Frame = 1 | POS = 1 | LEN = 18 | FOR 
+ATG GCC ATT ATG ACA TAA
+>  seq4 | Frame = 1 | POS = 26 | LEN = 6 | FOR 
+ATG TAG
+>  seq4 | Frame = 2 | POS = 26 | LEN = 6 | FOR 
+ATG TAG
+>  seq4 | Frame = 6 | POS = 16 | LEN = 9 | REV 
+ATG TCA TAA

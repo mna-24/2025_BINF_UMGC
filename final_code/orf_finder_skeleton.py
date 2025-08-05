@@ -1,6 +1,6 @@
 # BIFS617 ORF Finder Skeleton
-# Team members:
-# Date:
+# Team members: Michael, Raquel, Harrison
+# Date: 05Aug25
 # Fill in your code where prompted.
 import os
 from collections import defaultdict
