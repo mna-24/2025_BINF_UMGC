@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 
 
 def load_fasta(filepath):
-    # Team Member Name:
+    # Team Member Name: Michael
     # TODO: Parse a multi-line FASTA file, return dictionary {header: sequence}
     with open(filepath, 'r') as file: #pass file path to function
         seq_dict = {} #initialize empty dictionary
@@ -33,7 +33,7 @@ def load_fasta(filepath):
 
 from Bio.Seq import Seq
 def reverse_complement(original_seq):
-    # Team Member Name:
+    # Team Member Name: Harrsion
     # TODO: Return reverse complement of sequence (optional: use Bio.Seq)
 
     seq_obj = Seq(original_seq) #creating Biopython seq object
@@ -46,7 +46,7 @@ def reverse_complement(original_seq):
 
 
 def find_orfs(header, seq, min_len, strand = '+' ):
-    # Team Member Name:
+    # Team Member Name: Michael
     # TODO: Identify ORFs in all 3 reading frames for one strand (The project objective says all 6 reading frames though???
     start_codon = 'ATG'
     stop_codons = ['TAA', 'TAG', 'TGA']
@@ -80,7 +80,7 @@ def find_orfs(header, seq, min_len, strand = '+' ):
 
 
 def format_orf_output(header, frame, position, seq, strand):
-    # Team Member Name:
+    # Team Member Name: Harrision
     # TODO: Return formatted FASTA header and codon-separated (spaces between each codon) sequence
 
     direction = 'FOR' if strand == '+' else 'REV'
@@ -94,7 +94,7 @@ def format_orf_output(header, frame, position, seq, strand):
 
 
 def create_visualization(orf_data, output_path):
-    # Team Member Name:
+    # Team Member Name: Raquel
     # TODO: create a visualization, save the file, for your ORF output
     """Create a bar chart showing number of ORFs per sequence per strand and a histogram of ORF lengths."""
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -136,7 +136,7 @@ def create_visualization(orf_data, output_path):
     plt.close()
 
 def main():
-    # Team Member Name:
+    # Team Member Name: Raquel
     # TODO: Implement user input, sequence processing, and ORF printing and save the file
 
     fasta_file = input("Enter FASTA filename: ")
